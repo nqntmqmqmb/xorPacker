@@ -1,0 +1,7 @@
+C:\Users\coldboot\source\repos\xorStub\xorStub\bin\Debug\xorStub.exe.config
+C:\Users\coldboot\source\repos\xorStub\xorStub\bin\Debug\xorStub.exe
+C:\Users\coldboot\source\repos\xorStub\xorStub\bin\Debug\xorStub.pdb
+C:\Users\coldboot\source\repos\xorStub\xorStub\obj\Debug\xorStub.csprojAssemblyReference.cache
+C:\Users\coldboot\source\repos\xorStub\xorStub\obj\Debug\xorStub.csproj.CoreCompileInputs.cache
+C:\Users\coldboot\source\repos\xorStub\xorStub\obj\Debug\xorStub.exe
+C:\Users\coldboot\source\repos\xorStub\xorStub\obj\Debug\xorStub.pdb

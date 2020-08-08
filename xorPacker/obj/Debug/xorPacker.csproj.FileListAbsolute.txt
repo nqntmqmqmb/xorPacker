@@ -1,0 +1,9 @@
+C:\Users\coldboot\source\repos\xorPacker\xorPacker\obj\Debug\xorPacker.csproj.CoreCompileInputs.cache
+C:\Users\coldboot\source\repos\xorPacker\xorPacker\bin\Debug\xorPacker.exe.config
+C:\Users\coldboot\source\repos\xorPacker\xorPacker\bin\Debug\xorPacker.exe
+C:\Users\coldboot\source\repos\xorPacker\xorPacker\bin\Debug\xorPacker.pdb
+C:\Users\coldboot\source\repos\xorPacker\xorPacker\obj\Debug\xorPacker.exe
+C:\Users\coldboot\source\repos\xorPacker\xorPacker\obj\Debug\xorPacker.pdb
+C:\Users\coldboot\source\repos\xorPacker\xorPacker\obj\Debug\xorPacker.csprojAssemblyReference.cache
+C:\Users\coldboot\source\repos\xorPacker\xorPacker\obj\Debug\xorPacker.Properties.Resources.resources
+C:\Users\coldboot\source\repos\xorPacker\xorPacker\obj\Debug\xorPacker.csproj.GenerateResource.cache
